@@ -2,9 +2,21 @@
 
 <div id = "wrapper">
    <table>
-      <th class = "name-header" @click="sort('first_name')">Name</th>
-      <th @click="sort('email')"> Email </th>
-      <th @click="sort('company')"> Company </th>
+      <th class = "name-header" @click="sort('first_name')">
+      	Name 
+      	<i v-show = "currentSortDir == 'asc' && currentSort == 'first_name'" class="material-icons">arrow_upward</i> 
+      	<i  v-show = "currentSortDir == 'desc' && currentSort == 'first_name'" class="material-icons"> arrow_downward </i>
+      </th>
+      <th @click="sort('email')"> 
+      	Email 
+      	<i  v-show = "currentSortDir == 'asc' && currentSort == 'email'" class="material-icons">arrow_upward</i> 
+      	<i  v-show = "currentSortDir == 'desc' && currentSort == 'email'" class="material-icons"> arrow_downward </i>
+      </th>
+      <th @click="sort('company')">
+       Company 
+       <i v-show = "currentSortDir == 'asc' && currentSort == 'company'" class="material-icons">arrow_upward</i> 
+       <i v-show = "currentSortDir == 'desc' && currentSort == 'company'" class="material-icons"> arrow_downward </i>
+   	   </th>
     <tr v-for="person of sortedPeople">
       <td class = "name"> {{person.first_name}} {{person.last_name}} </td>
       <td> {{person.email}} </td>
@@ -22,7 +34,7 @@
   	 <b>  {{10*(currentPage-1) +1 }} - {{pageSize*currentPage}} of {{people.length}} </b> </div>
 	 <div id = "page-control"> <b> {{currentPage}} of {{people.length/pageSize}} pages  </b> <button id ="prevpage-btn" @click = "prevPage"> < </button> <div id = "currentPage"> 
 	 	<select v-model = "currentPage">
-	 		<option v-for="index in 100"> {{index}} </option>
+	 		<option v-for="index in people.length/pageSize"> {{index}} </option>
 	 	</select>
 	  </div>
 	 	 <button id = "nextpage-btn" @click = "nextPage"> > </button> </div>
@@ -47,6 +59,7 @@ export default {
       currentSortDir: 'asc',
       pageSize: 10,
       currentPage: 1
+
     }
   },
  
@@ -80,16 +93,22 @@ export default {
    	  
         let modifier = 1;
         if(this.currentSortDir === 'desc') modifier = -1;
-        if(a[this.currentSort] == null || b[this.currentSort] == null){
-        	return -1*modifier;
+
+        if(a[this.currentSort] == null){
+        	a[this.currentSort] = "";
+        } else if (b[this.currentSort] == null){
+        	b[this.currentSort] = "";
         }
+
         if(a[this.currentSort] < b[this.currentSort]){ 
         	
         	return -1 * modifier;
         }
+
         if(a[this.currentSort] > b[this.currentSort]) {
         		
-        	return 1 * modifier; }
+        	return 1 * modifier; 
+        }
         return 0;
       }).filter((row, index) => { //limit view and not repeat due to pagination
         let start = (this.currentPage-1)*this.pageSize;
@@ -236,6 +255,10 @@ export default {
 
 	#nextpage-btn{
 		border-right:none;
+	}
+
+	.material-icons{
+		font-size: 12px;
 	}
 	
 </style> 
